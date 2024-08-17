@@ -1,15 +1,21 @@
 {
-  "name": "alyamovsky/symfony-docker-skeleton",
+  "name": "abuzikhin/symfony-docker-skeleton",
   "type": "template",
   "description": "A project template for Symfony application running inside of Docker containers for convenient development.",
   "keywords": ["template"],
-  "homepage": "https://github.com/alyamovsky/symfony-docker-skeleton",
+  "homepage": "https://github.com/ABuzikhin/symfony-docker-skeleton",
   "license": "MIT",
   "authors": [
     {
       "name": "Andrew Alyamovksy",
       "email": "andrew.alyamovsky@gmail.com",
       "homepage": "https://alyamovsky.com",
+      "role": "Developer"
+    },
+    {
+      "name": "Andrei Buzikhin",
+      "email": "a.buzikhin@gmail.com",
+      "homepage": "https://dron2004.ru",
       "role": "Developer"
     }
   ]

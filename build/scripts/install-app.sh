@@ -10,6 +10,11 @@ fi
 
 docker run --rm -u "$(id -u)":"$(id -g)" -v "$(pwd)":/app composer create-project symfony/skeleton:"$VERSION.*" $APP_TMP_DIR
 
+docker run --rm -u "$(id -u)":"$(id -g)" -v "$(pwd)/$APP_TMP_DIR":/app composer:lts composer require logger
+docker run --rm -u "$(id -u)":"$(id -g)" -v "$(pwd)/$APP_TMP_DIR":/app composer:lts composer require phpunit
+docker run --rm -u "$(id -u)":"$(id -g)" -v "$(pwd)/$APP_TMP_DIR":/app composer:lts composer require doctrine
+
+docker run --rm -u "$(id -u)":"$(id -g)" -v "$(pwd)/$APP_TMP_DIR":/app composer:lts composer require --dev symfony/profiler-pack
 docker run --rm -u "$(id -u)":"$(id -g)" -v "$(pwd)/$APP_TMP_DIR":/app composer:lts composer require --dev friendsofphp/php-cs-fixer
 docker run --rm -u "$(id -u)":"$(id -g)" -v "$(pwd)/$APP_TMP_DIR":/app composer:lts composer require --dev vimeo/psalm
 

@@ -5,7 +5,7 @@
 A project template in the following configuration:
 1. Latest stable Symfony framework (6.4 at the moment), with the ability to specify the version
 2. PHP 8.3
-3. PostgreSQL 16.3 (can be altered in the docker compose file) ?
+3. MySQL 8+ (can be altered in the docker compose file) ?
 4. Separate Docker containers for Nginx, FPM, CLI and a database
 5. CS-Fixer and Psalm on board
 
@@ -14,20 +14,20 @@ A project template in the following configuration:
 1. The application and docker files are located on the same level: in the `/app` and `/docker` folders, respectively. 
    This allows you to separate the symphony-application and docker environment variables, and to implement the mono 
    repository pattern by adding new folders if necessary: `/centrifugo`, `s3-storage`, etc.
-2. The `compose.override.yaml` is ignored by default, so you can add your own settings without worrying about overwriting the original ones.
+2. The `docker-compose.override.yaml` is ignored by default, so you can add your own settings without worrying about overwriting the original ones.
 
 # Quick Start
-One-liner to create a new project: `composer create-project ddlzz/symfony-docker-website-skeleton local_project_path && make setup-configs && make init OPTIONS="webapp" && make up`
+One-liner to create a new project: `composer create-project abuzikhin/symfony-docker-skeleton local_project_path && make setup-configs && make init OPTIONS="webapp" && make up`
 
 Split into steps:
-1. `composer create-project ddlzz/symfony-docker-website-skeleton local_project_path`
+1. `composer create-project abuzikhin/symfony-docker-skeleton local_project_path`
 2. `make setup-configs` - create .env files for docker containers
 3. `make init OPTIONS="webapp"` - very important! Run it before making any commits to your repo. You can omit the `OPTIONS` parameter if you don't need to use the webapp.
 4. `make up` - start docker containers 
 
 Default ports are random (47001-47999) for every created project, so click the link generated in CLI with the output of `make up` command and enjoy!
 
-You also can set desired ports for Nginx and PostgreSQL manually in generated /.env file (don't forget to run `make restart` afterwards).
+You also can set desired ports for Nginx and MySQL manually in generated /.env file (don't forget to run `make restart` afterwards).
 
 # Flags
 When running make init, you can use these flags:
@@ -39,6 +39,7 @@ Examples:
 ```
 make init OPTIONS="webapp"
 make init VERSION=7.2
+make init VERSION=6.4
 make init OPTIONS="webapp" VERSION=7.2
 ```
 
