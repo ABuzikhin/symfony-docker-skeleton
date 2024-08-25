@@ -14,7 +14,7 @@ services:
     ports:
       - "${DOCKER_NGINX_PORT}:80"
     networks:
-      - internal
+      - app-network
   php-fpm:
     container_name: ${DOCKER_PROJECT_TITLE}-php-fpm
     restart: always
@@ -23,15 +23,14 @@ services:
       dockerfile: php-fpm.docker
     volumes:
       - ./app:/app
-      - sessions:/var/www/sessions
     depends_on:
-      postgres:
+      mysql:
         condition: service_healthy
     environment:
-      XDEBUG_CONFIG: "remote_host=${DOCKER_LOCAL_NETWORK_IP} remote_port=9009 remote_enable=1"
+      XDEBUG_CONFIG: "client_host=host.docker.internal client_port=9009 idekey=PHPSTORM log_level=0"
       PHP_IDE_CONFIG: "serverName=Docker"
     networks:
-      - internal
+      - app-network
   php-cli:
     container_name: ${DOCKER_PROJECT_TITLE}-php-cli
     restart: always
@@ -43,45 +42,40 @@ services:
       - composer:/root/.composer/cache
       - ./docker/data/.composer/auth.json:/root/.composer/auth.json
     depends_on:
-      postgres:
+      mysql:
         condition: service_healthy
     tty: true
     environment:
-      XDEBUG_CONFIG: "remote_host=${DOCKER_LOCAL_NETWORK_IP} remote_port=9009 remote_enable=1"
+      XDEBUG_CONFIG: "client_host=host.docker.internal client_port=9009 idekey=PHPSTORM log_level=0"
       PHP_IDE_CONFIG: "serverName=Docker"
     networks:
-      - internal
-  postgres:
-    container_name: ${DOCKER_PROJECT_TITLE}-postgres
+      - app-network
+  mysql:
+    container_name: ${DOCKER_PROJECT_TITLE}-mysql
     restart: always
-    image: postgres:16.3-alpine
+    image: mysql:8
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - mysql:/var/lib/mysql
     environment:
-      POSTGRES_USER: app
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: app
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DOCKER_MYSQL_DB_NAME:-app}
+      MYSQL_USER: app
+      MYSQL_PASSWORD: secret
     ports:
-      - "${DOCKER_POSTGRESQL_PORT}:5432"
+      - "${DOCKER_MYSQL_PORT:-3306}:3306"
     networks:
-      - internal
+      - app-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 1s
-      timeout: 1s
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 5s
       retries: 10
-      start_period: 5s
 
 volumes:
   composer:
   postgres:
-  sessions:
+  mysql:
 
 networks:
-  # Xdebug config
-  internal:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: "${DOCKER_LOCAL_NETWORK_IP}/28" # xdebug.remote_host=192.168...
+  app-network:
+    name: app-network
+    external: true

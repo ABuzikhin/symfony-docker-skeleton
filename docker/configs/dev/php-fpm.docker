@@ -5,10 +5,8 @@ RUN mkdir -p /var/www/sessions && chown -R www-data:www-data /var/www/sessions &
     apt-get update --fix-missing && \
     apt-get install -y libpq-dev
 
-RUN pecl install xdebug && \
-    docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql && \
-    docker-php-ext-install -j$(nproc) pdo_pgsql && \
-    docker-php-ext-enable xdebug
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+RUN docker-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-enable pdo_mysql
 
 COPY ./php-fpm/default.ini /usr/local/etc/php/conf.d/default.ini
 
