@@ -1,5 +1,5 @@
 {
-  "name": "abuzikhin/symfony-docker-skeleton",
+  "name": "abuzikhin/symfony-mysql-docker-skeleton",
   "type": "template",
   "description": "A project template for Symfony application running inside of Docker containers for convenient development.",
   "keywords": ["template"],
